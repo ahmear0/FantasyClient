@@ -1,15 +1,18 @@
 import java.io.*;
+import java.awt.event.*;
+import javax.swing.*;
 
 public class patch {
     public static void main(String [] args) {
 
         // The name of the file to open.
-        String fileName = "allPlayers.txt";
+
+	String fileName = "week1.csv";
 	String mod_fileName = "mod_" + fileName;
 	
         // This will reference one line at a time
         String line = null;
-	String table = "Player";
+	String table = "week1pass";
 	String header = "INSERT INTO " + table + " VALUES(";
 	String footer = ");";
 	String newLine = null;
@@ -53,3 +56,5 @@ public class patch {
         }
     }
 }
+
+

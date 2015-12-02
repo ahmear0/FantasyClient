@@ -1,0 +1,42 @@
+CREATE TABLE Player (playerID int(5) NOT NULL, lastName varchar(20) NOT NULL, firstName varchar(20) NOT NULL, teamName varchar(3), position varchar(2) NOT NULL, PRIMARY KEY (playerID));
+
+CREATE TABLE FantasyTeam (userName varchar(20) NOT NULL, email varchar(30) NOT NULL, PRIMARY KEY (userName));
+
+CREATE TABLE ProfessionalTeam (teamName varchar(3) NOT NULL, byeWeek int(2) NOT NULL, PRIMARY KEY (teamName));
+
+CREATE TABLE Matchup (week int(2) NOT NULL, userName1 varchar(20) NOT NULL, score1 numeric(5,2) ,userName2 varchar(20), score2 numeric(5,2));
+
+CREATE TABLE Rostered (start int(1), rosterSpot enum('QB','RB','WR','TE'), playerID int(5)  NOT NULL, userName varchar(20) NOT NULL, CHECK(start>=0), CHECK(start<2), Primary Key (playerID, userName), Foreign Key (playerID) REFERENCES Player(playerID), Foreign Key (userName) REFERENCES FantasyTeam(userName));
+
+CREATE TABLE playerScores 
+(week int(2) not null, 
+passYds int(3),
+passTD int(1),
+passPick int(1), 
+rushYds int(3), 
+rushTD int(1), 
+recYds int(3), 
+recTD int(1),  
+retYds int(3), 
+retTD int(1), 
+fLoss int(1), 
+playerID int(5) not null, 
+Primary Key (playerID, week), 
+Foreign Key (playerID) REFERENCES Player(playerID));
+
+
+
+create table week1pass (lastName varchar(20) NOT NULL, firstName varchar(20) NOT NULL, teamName varchar(3), week int(2) NOT NULL, passYds int(3), passTD int(1), passPick int(1));
+
+select firstName, lastName, passYds, rushYds, recYds, retYds from playerScores Natural Join Player;
+
+
+select firstName, lastName, passYds, rushYds, recYds, retYds, passYds + rushYds + recYds + retYds as totalYds from playerScores Natural Join Player where week=11 AND passYds IS NOT NULL
+UNION
+(select firstName, lastName, passYds, rushYds, recYds, retYds, passYds + rushYds + recYds + retYds as totalYds from playerScores Natural Join Player where week=11 AND rushYds IS NOT NULL)
+UNION
+(select firstName, lastName, passYds, rushYds, recYds, retYds, passYds + rushYds + recYds + retYds as totalYds from playerScores Natural Join Player where week=11 AND recYds IS NOT NULL)
+UNION
+(select firstName, lastName, passYds, rushYds, recYds, retYds, passYds + rushYds + recYds + retYds as totalYds from playerScores Natural Join Player where week=11 AND retYds IS NOT NULL);
+
+(select * from playerScores where passYds IS NULL AND rushYds IS NULL AND recYds IS NULL AND retYds IS NULL);
