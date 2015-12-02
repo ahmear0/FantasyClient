@@ -4,7 +4,6 @@ CREATE TABLE FantasyTeam (userName varchar(20) NOT NULL, email varchar(30) NOT N
 
 CREATE TABLE ProfessionalTeam (teamName varchar(3) NOT NULL, byeWeek int(2) NOT NULL, PRIMARY KEY (teamName));
 
-CREATE TABLE Matchup();
 
 INSERT INTO FantasyTeam VALUES('Meral','mxo2@case.edu');
 INSERT INTO FantasyTeam VALUES('Asheq','ara47@case.edu');
@@ -33,7 +32,6 @@ INSERT INTO ProfessionalTeam VALUES('TAM',6);
 INSERT INTO ProfessionalTeam VALUES('IND',10);
 INSERT INTO ProfessionalTeam VALUES('BUF',8);
 INSERT INTO ProfessionalTeam VALUES('KAN',9);
-
 INSERT INTO ProfessionalTeam VALUES('MIA',5);
 INSERT INTO ProfessionalTeam VALUES('NYJ',5);
 INSERT INTO ProfessionalTeam VALUES('NYG',11);
@@ -57,7 +55,7 @@ create table Matchup (week int(2) NOT NULL, userName1 varchar(20) NOT NULL, scor
 INSERT INTO Matchup VALUES(1,'Asheq',84.0,'Ron',96.2);
 INSERT INTO Matchup VALUES(1,'Tekin',91.0,'Meral',101.5);
 INSERT INTO Matchup VALUES(1,'Connamacher',86.0,'Kamil',98.0);
-INSERT INTO Matchup VALUES(1,'Lewicki',120.0,'Mehmet',91.0);
+INSERT INTO Matchup VALUES(1,'Lewicki',120.0,'Koyuturk',91.0);
 INSERT INTO Matchup VALUES(1,'Rabinovich',100.0,'Liberatore',94.0);
 
 create table Rostered (start int(1),
