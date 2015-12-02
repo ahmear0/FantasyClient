@@ -1,0 +1,150 @@
+
+
+CREATE TABLE FantasyTeam (userName varchar(20) NOT NULL, email varchar(30) NOT NULL, PRIMARY KEY (userName));
+
+CREATE TABLE ProfessionalTeam (teamName varchar(3) NOT NULL, byeWeek int(2) NOT NULL, PRIMARY KEY (teamName));
+
+CREATE TABLE Matchup();
+
+INSERT INTO FantasyTeam VALUES('Meral','mxo2@case.edu');
+INSERT INTO FantasyTeam VALUES('Asheq','ara47@case.edu');
+INSERT INTO FantasyTeam VALUES('Ron','rdw62@case.edu');
+INSERT INTO FantasyTeam VALUES('Kamil','kxt147@case.edu');
+INSERT INTO FantasyTeam VALUES('Tekin','gxo3@case.edu');
+INSERT INTO FantasyTeam VALUES('Lewicki','msl88@case.edu');
+INSERT INTO FantasyTeam VALUES('Mehmet','mxk331@case.edu');
+INSERT INTO FantasyTeam VALUES('Connamacher','hsc21@case.edu');
+INSERT INTO FantasyTeam VALUES('Rabinovich','mxr136@case.edu');
+INSERT INTO FantasyTeam VALUES('Liberatore','vxl11@case.edu');
+
+INSERT INTO ProfessionalTeam VALUES('PHI',8);
+INSERT INTO ProfessionalTeam VALUES('DET',9);
+INSERT INTO ProfessionalTeam VALUES('CAR',5);
+INSERT INTO ProfessionalTeam VALUES('DAL',6);
+INSERT INTO ProfessionalTeam VALUES('CHI',7);
+INSERT INTO ProfessionalTeam VALUES('GNB',7);
+INSERT INTO ProfessionalTeam VALUES('MIN',5);
+INSERT INTO ProfessionalTeam VALUES('ATL',10);
+INSERT INTO ProfessionalTeam VALUES('STL',6);
+INSERT INTO ProfessionalTeam VALUES('CIN',7);
+INSERT INTO ProfessionalTeam VALUES('OAK',6);
+INSERT INTO ProfessionalTeam VALUES('TEN',4);
+INSERT INTO ProfessionalTeam VALUES('TAM',6);
+INSERT INTO ProfessionalTeam VALUES('IND',10);
+INSERT INTO ProfessionalTeam VALUES('BUF',8);
+INSERT INTO ProfessionalTeam VALUES('KAN',9);
+
+INSERT INTO ProfessionalTeam VALUES('MIA',5);
+INSERT INTO ProfessionalTeam VALUES('NYJ',5);
+INSERT INTO ProfessionalTeam VALUES('NYG',11);
+INSERT INTO ProfessionalTeam VALUES('WAS',8);
+INSERT INTO ProfessionalTeam VALUES('SDG',10);
+INSERT INTO ProfessionalTeam VALUES('JAX',8);
+INSERT INTO ProfessionalTeam VALUES('HOU',9);
+INSERT INTO ProfessionalTeam VALUES('ARI',9);
+INSERT INTO ProfessionalTeam VALUES('PIT',11);
+INSERT INTO ProfessionalTeam VALUES('SEA',9);
+INSERT INTO ProfessionalTeam VALUES('NOR',11);
+INSERT INTO ProfessionalTeam VALUES('SFO',10);
+INSERT INTO ProfessionalTeam VALUES('NWE',4);
+INSERT INTO ProfessionalTeam VALUES('DEN',7);
+INSERT INTO ProfessionalTeam VALUES('BAL',9);
+INSERT INTO ProfessionalTeam VALUES('CLE',11);
+
+
+create table Matchup (week int(2) NOT NULL, userName1 varchar(20) NOT NULL, score1 numeric(5,2) ,userName2 varchar(20), score2 numeric(5,2));
+
+INSERT INTO Matchup VALUES(1,'Asheq',84.0,'Ron',96.2);
+INSERT INTO Matchup VALUES(1,'Tekin',91.0,'Meral',101.5);
+INSERT INTO Matchup VALUES(1,'Connamacher',86.0,'Kamil',98.0);
+INSERT INTO Matchup VALUES(1,'Lewicki',120.0,'Mehmet',91.0);
+INSERT INTO Matchup VALUES(1,'Rabinovich',100.0,'Liberatore',94.0);
+
+create table Rostered (start int(1),
+rosterSpot enum('QB','RB','WR','TE'),
+playerID int(5) NOT NULL,
+userName varchar(20) NOT NULL,
+CHECK(start>=0),
+CHECK(start<2),
+Primary Key (playerID, userName),
+Foreign Key (playerID) REFERENCES Player(playerID),
+Foreign Key (userName) REFERENCES FantasyTeam(userName));
+
+
+INSERT INTO Rostered VALUES(1,'TE',51729,'Asheq');
+INSERT INTO Rostered VALUES(1,'WR',64066,'Asheq');
+INSERT INTO Rostered VALUES(1,'WR',69879,'Asheq');
+INSERT INTO Rostered VALUES(1,'QB',95972,'Asheq');
+INSERT INTO Rostered VALUES(1,'RB',75762,'Asheq');
+INSERT INTO Rostered VALUES(1,'WR',62811,'Asheq');
+INSERT INTO Rostered VALUES(1,'RB',32207,'Asheq');
+INSERT INTO Rostered VALUES(0,'RB',87515,'Asheq');
+INSERT INTO Rostered VALUES(0,'WR',92584,'Asheq');
+INSERT INTO Rostered VALUES(0,'QB',11117,'Asheq');
+INSERT INTO Rostered VALUES(0,'RB',46913,'Asheq');
+INSERT INTO Rostered VALUES(0,'RB',68795,'Asheq');
+INSERT INTO Rostered VALUES(1,'RB',14691,'Ron');
+INSERT INTO Rostered VALUES(1,'QB',38776,'Ron');
+INSERT INTO Rostered VALUES(1,'WR',43142,'Ron');
+INSERT INTO Rostered VALUES(1,'TE',67281,'Ron');
+INSERT INTO Rostered VALUES(1,'WR',62547,'Ron');
+INSERT INTO Rostered VALUES(1,'RB',24505,'Ron');
+INSERT INTO Rostered VALUES(0,'RB',31240,'Ron');
+INSERT INTO Rostered VALUES(0,'TE',89354,'Ron');
+INSERT INTO Rostered VALUES(1,'WR',94447,'Ron');
+INSERT INTO Rostered VALUES(0,'QB',44066,'Ron');
+INSERT INTO Rostered VALUES(0,'RB',33269,'Ron');
+INSERT INTO Rostered VALUES(0,'RB',89067,'Ron');
+INSERT INTO Rostered VALUES(0,'RB',51980,'Ron');
+
+
+
+select Player.playerID, Player.position, lastName, firstName from Rostered, Player where Rostered.playerID=Player.playerID and userName='Ron';
+
+
+select Player.playerID, Player.position, lastName, firstName from Rostered, Player where Rostered.playerID=Player.playerID and userName='Asheq';
+
+create table playerScores 
+(week int(2) not null, 
+passYds int(3), 
+passPick int(1), 
+pass1st int(2), 
+rushYds int(3), 
+rushTD int(1), 
+rush1st int(2), 
+recYds int(3), 
+recTD int(1), 
+rec1st int(2), 
+retYds int(3), 
+retTD int(1), 
+fumLoss int(1), 
+playerID int(5) not null, 
+Primary Key (playerID, week), 
+Foreign Key (playerID) REFERENCES Player(playerID));
+
+
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,26,null,null,null,null,null,51729);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,50,null,2,null,null,1,64066);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,113,null,5,null,null,null,69879);
+INSERT INTO playerScores VALUES(11,253,null,10,33,null,1,null,null,null,null,null,null,95972);
+INSERT INTO playerScores VALUES(11,null,null,null,102,null,5,12,1,1,null,null,null,75762);
+INSERT INTO playerScores VALUES(11,null,null,null,2,null,null,73,null,4,48,null,null,62811);
+INSERT INTO playerScores VALUES(11,null,null,null,7,null,3,9,null,null,null,null,null,32207);
+INSERT INTO playerScores VALUES(11,null,null,null,59,null,2,13,null,1,null,null,null,87515);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,null,null,null,null,null,null,92584);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,null,null,null,null,null,null,11117);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,null,null,null,null,null,null,46913);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,1,38,1,1,6,null,null,68795);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,null,null,null,null,null,null,14691);
+INSERT INTO playerScores VALUES(11,169,null,7,8,null,1,null,null,null,null,null,1,38776);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,66,null,3,null,null,null,43142);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,12,null,1,null,null,null,67281);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,118,2,5,null,null,null,62547);
+INSERT INTO playerScores VALUES(11,null,null,null,63,null,1,2,null,null,null,null,null,24505);
+INSERT INTO playerScores VALUES(11,null,null,null,16,null,1,48,null,1,null,null,null,31240);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,null,null,null,null,null,null,89354);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,null,null,null,null,null,null,94447);
+INSERT INTO playerScores VALUES(11,315,null,14,34,null,2,null,null,null,null,null,2,44066);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,null,null,null,null,null,null,33269);
+INSERT INTO playerScores VALUES(11,null,null,null,null,null,null,null,null,null,null,null,null,89067);
+INSERT INTO playerScores VALUES(11,null,null,null,14,null,null,30,null,1,null,null,null,51980);

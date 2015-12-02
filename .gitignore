@@ -2,3 +2,7 @@ gradedPart2.pdf
 
 #binary files
 *.class
+
+#assignment files
+*.docx
+*.doc
