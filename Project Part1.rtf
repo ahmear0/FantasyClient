@@ -1,0 +1,120 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1348\cocoasubrtf170
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;\f1\fnil\fcharset0 Menlo-Regular;\f2\fmodern\fcharset0 CourierNewPSMT;
+}
+{\colortbl;\red255\green255\blue255;}
+\margl1440\margr1440\vieww12600\viewh7800\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\qr
+
+\f0\fs24 \cf0 Asheq Ahmed, ara47\
+Project Part 1\
+eecs341\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+Question 1.  Find the movies produced by Disney in 1998.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\fs22 \cf0 \CocoaLigature0 mysql> select Movie.title from Movie where studioname='Disney' and year='1998';\
++---------+\
+| title   |\
++---------+\
+| Flubber |\
+| Mulan   |\
++---------+\
+2 rows in set (0.00 sec)
+\f2\fs24 \CocoaLigature1 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0 \cf0 \
+Question 2.  Find producer name for the movie \'91Forest Gump\'92.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\fs22 \cf0 \CocoaLigature0 mysql> select MovieExec.name from MovieExec, Movie where MovieExec.cn=Movie.producercn and Movie.title='Forrest Gump';\
++----------------+\
+| name           |\
++----------------+\
+| Wendy Finerman |\
++----------------+\
+1 row in set (0.00 sec)
+\f0\fs24 \CocoaLigature1 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+Question 3.  Find stars that live in the same city.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\fs22 \cf0 \CocoaLigature0 mysql> select MS1.name, MS2.address, MS2.name, MS2.address from MovieStar as MS1 Inner Join MovieStar as MS2 where MS1.address=MS2.address and MS1.name > MS2.name;\
++-------------+---------------+--------------+---------------+\
+| name        | address       | name         | address       |\
++-------------+---------------+--------------+---------------+\
+| Liam Neeson | Hollywood, CA | Eddie Murphy | Hollywood, CA |\
+| Tom Hanks   | Hollywood, CA | Eddie Murphy | Hollywood, CA |\
+| Tom Hanks   | Hollywood, CA | Liam Neeson  | Hollywood, CA |\
++-------------+---------------+--------------+---------------+\
+3 rows in set (0.00 sec)\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f0\fs24 \cf0 \CocoaLigature1 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+Question 4.  Find the average length of a movie for each year.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\fs22 \cf0 \CocoaLigature0 mysql> select Movie.year, avg(Movie.length) from Movie group by year; \
++------+-------------------+\
+| year | avg(Movie.length) |\
++------+-------------------+\
+| 1985 |          152.0000 |\
+| 1993 |          197.0000 |\
+| 1994 |          120.0000 |\
+| 1995 |          140.0000 |\
+| 1996 |          121.0000 |\
+| 1997 |          139.0000 |\
+| 1998 |          106.5000 |\
+| 2006 |          146.0000 |\
+| 2009 |          144.0000 |\
++------+-------------------+\
+9 rows in set (0.00 sec)\
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+
+\f0\fs24 \cf0 \CocoaLigature1 \
+\
+Question 5.  Find the studio names of studios which produced movies that are longer than the average length of all movies produced.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\fs22 \cf0 \CocoaLigature0 mysql> create view movieLengths as select M1.studioname, M1.length \
+    -> \
+    -> from \
+    -> \
+    -> Movie as M1 \
+    -> JOIN \
+    -> Movie as M2 \
+    -> where\
+    ->  M1.title=M2.title;\
+Query OK, 0 rows affected (0.01 sec)\
+\
+mysql> select distinct studioname from movieLengths where length > (select avg(length) from movieLengths);\
++------------------------+\
+| studioname             |\
++------------------------+\
+| DreamWorks SKG         |\
+| Columbia Pictures      |\
+| MCA/Universal Pictures |\
+| Paramount              |\
+| Warner Bros.           |\
++------------------------+\
+5 rows in set (0.00 sec)
+\f0\fs24 \CocoaLigature1 \
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural
+\cf0 \
+Question 6.  Find the names of Studios of movies in which Tom Hanks stars in every movie they produce.\
+\
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural
+
+\f1\fs22 \cf0 \CocoaLigature0 mysql> select M1.studioname from Movie as M1 natural join StarsIn as S1 where S1.name='Tom Hanks' not in (select M2.studioname from Movie as M2 natural join StarsIn as S2 where not S2.name='Tom Hanks');\
+Empty set, 20 warnings (0.00 sec)\
+\
+}
