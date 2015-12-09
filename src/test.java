@@ -5,7 +5,16 @@ import java.sql.*;
 
 public class test
 {
-	public static void main(String[] args)
+
+	// JDBC driver name and database URL
+   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+   static final String DB_URL = "jdbc:mysql://localhost/Fantasy";
+
+   //  Database credentials
+   static final String USER = "root";
+   static final String PASS = "YyJ=q7Hrv&l0";
+
+   public static void main(String[] args)
 	{
 		KeyboardReader reader = new KeyboardReader();
 		
@@ -18,19 +27,6 @@ public class test
 		System.out.print("Enter Last Name: ");
 		last = reader.readLine();
 
-		player testPlayer = new player(first, last, position.wr);
-		
-		System.out.print(testPlayer);
-
-   // JDBC driver name and database URL
-   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-   static final String DB_URL = "jdbc:mysql://localhost/EMP";
-
-   //  Database credentials
-   static final String USER = "username";
-   static final String PASS = "password";
-   
-   public static void main(String[] args) {
    Connection conn = null;
    Statement stmt = null;
    try{
@@ -45,22 +41,18 @@ public class test
       System.out.println("Creating statement...");
       stmt = conn.createStatement();
       String query1;
-      query1 = "SELECT * FROM Players";
+      query1 = "SELECT playerID FROM Player where lastName='" + last + "' AND firstName='" + first + "';";
+
       ResultSet rs = stmt.executeQuery(query1);
 
       //STEP 5: Extract data from result set
       while(rs.next()){
          //Retrieve by column name
-         int id  = rs.getInt("id");
-         int age = rs.getInt("age");
-         String first = rs.getString("first");
-         String last = rs.getString("last");
+         int id  = rs.getInt("playerID");
 
          //Display values
-         System.out.print("ID: " + id);
-         System.out.print(", Age: " + age);
-         System.out.print(", First: " + first);
-         System.out.println(", Last: " + last);
+         System.out.println("ID:  " + id);
+         System.out.println("Name: " + first + " " + last);
       }
       //STEP 6: Clean-up environment
       rs.close();
