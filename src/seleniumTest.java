@@ -66,7 +66,7 @@ public class seleniumTest {
 				fLoss + "," +  playerID + ");";
 
 			System.out.println(runningBackEntry);
-			
+
             System.out.println(stats[1] + " " + stats[2] + " caught for " + recYds + " yards.");
         }
         catch (Exception e)
