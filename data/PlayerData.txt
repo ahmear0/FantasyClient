@@ -12,6 +12,7 @@ INSERT INTO Player VALUES(96008,'Kuhn','John','GNB','RB');
 INSERT INTO Player VALUES(80460,'Fasano','Anthony','TEN','TE');
 INSERT INTO Player VALUES(23068,'Martin','Doug','TAM','RB');
 INSERT INTO Player VALUES(34877,'West','Terrance','TEN','RB');
+
 INSERT INTO Player VALUES(84942,'Hasselbeck','Matt','IND',QB');
 INSERT INTO Player VALUES(80266,'Greene','Rashad','JAX','WR');
 INSERT INTO Player VALUES(37817,'Herron','Dan','BUF','RB');

@@ -5,45 +5,79 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.Select;
+import java.util.*;
 
 public class seleniumTest {
     
     public static void main(String[] args)
     {
+    	//player attributes
+    	String lastName, firstName;
 
-	// Optional, if not specified, WebDriver will search your path for chromedriver.
-	// System.setProperty("webdriver.chrome.driver", "chromedriver");
+    	//playerScore attributes
+    	int passTD, passPick, rushTD, recTD, retTD, fLoss;
+    	double passYds, rushYds, recYds, retYds;
+
+    	int playerID = 33190;
+    	int week = 13;
 
 	WebDriver driver = new ChromeDriver();
-	driver.get("http://sports.yahoo.com/nfl/stats/byposition?pos=RB");
 
-	try {
-	    //Thread.sleep(5000); // Let the user actually see something!
-
-	    String Namepath = "[@id='my-players-table']/div[1]/div/table/tbody/tr[1]/td[1]/a";
-	    String davidJohnson = "//*[@id='yui_3_18_1_4_1449631150551_218']/a";
-
-		System.out.println("Statistics pulled using selenium are: ");
-
-	    WebElement player1 = driver.findElement(By.id("yui_3_18_1_4_1449632328143_145"));
+		try{
+			String statisticsURL = "http://sports.yahoo.com/nfl/stats/byposition?pos=RB";
+			String statisticRowPath = "//*[@id='yom-league-stats']/table[5]/tbody/tr[3]";
+            driver.get(statisticsURL);
 
 
-	    System.out.println(player1.getText());
+            WebElement name1 = driver.findElement(By.xpath(statisticRowPath));
 
-	    Thread.sleep(6000);  // Let the user actually see something!
+            String currentPlayer = name1.getText();
+            String[] stats = currentPlayer.split("\\s+");
 
-		} 
-		catch (Exception e)
-		{
-			_showErrorMessage(e);
-		}
-	    finally
-	    {
-	        driver.quit();
-	    }
+            lastName = stats[2];
+            firstName = stats[1];
+            passYds = 0;
+            passTD = 0;
+            passPick = 0;
+            rushYds = Double.parseDouble(stats[6]);
+            rushTD = Integer.parseInt(stats[9]);
+            recYds = Double.parseDouble(stats[12]);
+            recTD = Integer.parseInt(stats[15]);
+            retYds = 0;
+            retTD = 0;
+            fLoss = Integer.parseInt(stats[17]);
+
+            int i = 0;
+            for (String stat : stats)
+            {
+            	System.out.println("Stat " + i + ": " + stat);
+            	i++;
+            }
+
+            String runningBackEntry = "INSERT INTO playerScores VALUES(" + week + "," + passYds + "," + 
+				passTD + "," + 
+				passPick + "," +  
+				rushYds + "," + 
+				rushTD + "," +  
+				recYds + "," + 
+				recTD + "," +  
+				retYds + "," +  
+				retTD + "," +  
+				fLoss + "," +  playerID + ");";
+
+			System.out.println(runningBackEntry);
+			
+            System.out.println(stats[1] + " " + stats[2] + " caught for " + recYds + " yards.");
+        }
+        catch (Exception e)
+        {
+        	System.out.println("Exception is: " + e);
+        }
+        finally {
+            driver.close();
+        }
+
     }
 
-    private void _showErrorMessage(Exception e) {
-    	LOGGER.error(e.getClass() + ": " +  e.getMessage(), e);
-	}
+
 }
