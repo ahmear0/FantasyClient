@@ -1,5 +1,3 @@
-CREATE TABLE Player (playerID int(5) NOT NULL, lastName varchar(20) NOT NULL, firstName varchar(20) NOT NULL, teamName varchar(3), position varchar(2) NOT NULL, PRIMARY KEY (playerID));
-
 INSERT INTO Player VALUES(69806,'Brady','Tom','NWE','QB');
 INSERT INTO Player VALUES(82735,'Jones','Marvin','CIN','WR');
 INSERT INTO Player VALUES(47044,'Heyward-Bey','Darrius','PIT','WR');
@@ -12,8 +10,7 @@ INSERT INTO Player VALUES(96008,'Kuhn','John','GNB','RB');
 INSERT INTO Player VALUES(80460,'Fasano','Anthony','TEN','TE');
 INSERT INTO Player VALUES(23068,'Martin','Doug','TAM','RB');
 INSERT INTO Player VALUES(34877,'West','Terrance','TEN','RB');
-
-INSERT INTO Player VALUES(84942,'Hasselbeck','Matt','IND',QB');
+INSERT INTO Player VALUES(84942,'Hasselbeck','Matt','IND','QB');
 INSERT INTO Player VALUES(80266,'Greene','Rashad','JAX','WR');
 INSERT INTO Player VALUES(37817,'Herron','Dan','BUF','RB');
 INSERT INTO Player VALUES(87740,'Hogan','Chris','BUF','WR');
@@ -297,7 +294,7 @@ INSERT INTO Player VALUES(61639,'Crowder','Jamison','WAS','WR');
 INSERT INTO Player VALUES(48015,'Dickson','Ed','CAR','TE');
 INSERT INTO Player VALUES(34825,'Fowler','Jalston','TEN','RB');
 INSERT INTO Player VALUES(86081,'Bell','Blake','SFO','TE');
-INSERT INTO Player VALUES(41957,'Sims','Charles','TAM','RB');
+INSERT INTO Player VALUES(41951,'Sims','Charles','TAM','RB');
 INSERT INTO Player VALUES(56260,'Prosch','Jay','HOU','RB');
 INSERT INTO Player VALUES(75762,'Stewart','Jonathan','CAR','RB');
 INSERT INTO Player VALUES(32207,'Woodhead','Danny','SDG','RB');
@@ -404,7 +401,7 @@ INSERT INTO Player VALUES(29147,'Young','Darrel','WAS','RB');
 INSERT INTO Player VALUES(90602,'Peterson','Adrian','MIN','RB');
 INSERT INTO Player VALUES(96413,'Randle','Joseph','DAL','RB');
 INSERT INTO Player VALUES(98696,'Caldwell','Andre','DEN','WR');
-INSERT INTO Player VALUES(21846,'Watson','Ben','NOR','TE');
+INSERT INTO Player VALUES(21896,'Watson','Ben','NOR','TE');
 INSERT INTO Player VALUES(19935,'Johnson','Calvin','DET','WR');
 INSERT INTO Player VALUES(73676,'Manning','Peyton','DEN','QB');
 INSERT INTO Player VALUES(99720,'Miller','Lamar','MIA','RB');
