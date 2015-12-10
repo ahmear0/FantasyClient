@@ -3,7 +3,7 @@
 import TerminalIO.KeyboardReader;
 import java.sql.*;
 
-public class test
+public class databaseAPI
 {
 
 	// JDBC driver name and database URL
@@ -14,6 +14,14 @@ public class test
    static final String USER = "root";
    static final String PASS = "YyJ=q7Hrv&l0";
 
+
+   public static int getPlayerID(String firstName, String lastName)
+   {
+      this.firstName = firstName.replaceAll("[()\\s-]+", "");
+      this.lastName = lastName.replaceAll("[()\\s-]+", "");
+      return 0;
+   }
+
    public static void main(String[] args)
 	{
 		KeyboardReader reader = new KeyboardReader();
@@ -22,10 +30,15 @@ public class test
 		String last = "";
 
 		System.out.print("Enter First Name: ");
+
 		first = reader.readLine();
+      first = first.replaceAll("[()\\s-]+", "");
+      System.out.println(first);
 
 		System.out.print("Enter Last Name: ");
 		last = reader.readLine();
+      last = last.replaceAll("[()\\s-]+", "");
+      System.out.println(last);
 
    Connection conn = null;
    Statement stmt = null;
