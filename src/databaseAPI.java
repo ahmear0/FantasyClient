@@ -15,34 +15,20 @@ public class databaseAPI
    static final String PASS = "YyJ=q7Hrv&l0";
 
 
+   //makes mysql query using connectorJ driver
+   //gets playerID using the player's name
+   //so that we can insert stats using playerID key
    public static int getPlayerID(String firstName, String lastName)
    {
-      this.firstName = firstName.replaceAll("[()\\s-]+", "");
-      this.lastName = lastName.replaceAll("[()\\s-]+", "");
-      return 0;
-   }
+      int playerID = 0;
 
-   public static void main(String[] args)
-	{
-		KeyboardReader reader = new KeyboardReader();
-		
-		String first = "";
-		String last = "";
+      firstName = firstName.replaceAll("[()\\s-]+", "");
+      lastName = lastName.replaceAll("[()\\s-]+", "");
 
-		System.out.print("Enter First Name: ");
+      Connection conn = null;
+      Statement stmt = null;
+      try {
 
-		first = reader.readLine();
-      first = first.replaceAll("[()\\s-]+", "");
-      System.out.println(first);
-
-		System.out.print("Enter Last Name: ");
-		last = reader.readLine();
-      last = last.replaceAll("[()\\s-]+", "");
-      System.out.println(last);
-
-   Connection conn = null;
-   Statement stmt = null;
-   try{
       //STEP 2: Register JDBC driver
       Class.forName("com.mysql.jdbc.Driver");
 
@@ -54,43 +40,63 @@ public class databaseAPI
       System.out.println("Creating statement...");
       stmt = conn.createStatement();
       String query1;
-      query1 = "SELECT playerID FROM Player where lastName='" + last + "' AND firstName='" + first + "';";
+      query1 = "SELECT playerID FROM Player where lastName='" + lastName + "' AND firstName='" + firstName + "';";
 
       ResultSet rs = stmt.executeQuery(query1);
 
       //STEP 5: Extract data from result set
       while(rs.next()){
          //Retrieve by column name
-         int id  = rs.getInt("playerID");
+         playerID  = rs.getInt("playerID");
+         }
 
-         //Display values
-         System.out.println("ID:  " + id);
-         System.out.println("Name: " + first + " " + last);
-      }
       //STEP 6: Clean-up environment
       rs.close();
       stmt.close();
       conn.close();
-   }catch(SQLException se){
-      //Handle errors for JDBC
-      se.printStackTrace();
-   }catch(Exception e){
-      //Handle errors for Class.forName
-      e.printStackTrace();
-   }finally{
-      //finally block used to close resources
-      try{
-         if(stmt!=null)
-            stmt.close();
-      }catch(SQLException se2){
-      }// nothing we can do
-      try{
-         if(conn!=null)
-            conn.close();
-      }catch(SQLException se){
-         se.printStackTrace();
-      }//end finally try
-   }//end try
-   System.out.println("Goodbye!");
-}//end main
-}//end FirstExample
+      }  catch(SQLException se)
+         {
+            //Handle errors for JDBC
+            se.printStackTrace();
+         }  
+         catch(Exception e)
+         {
+            e.printStackTrace();
+         }  
+         finally
+         {
+            try {
+               if(stmt!=null)
+                  stmt.close();
+            }  catch(SQLException se2)
+                  {
+                     System.out.println("Exception thrown: " + se2.getStackTrace());
+                  }
+            try {
+               if(conn!=null)
+                  conn.close();
+            }catch(SQLException se)
+               {
+                  se.printStackTrace();
+               }
+         }
+
+      return playerID;
+   }
+
+   public static void main(String[] args)
+	{
+		KeyboardReader reader = new KeyboardReader();
+		
+		String first = "";
+		String last = "";
+      System.out.print("Enter First Name: ");
+      first = reader.readLine();
+      System.out.print("Enter Last Name: ");
+      last = reader.readLine();
+
+      int playerID = getPlayerID(first, last);
+
+      System.out.println("PlayerID is: " + playerID);
+   }
+}
