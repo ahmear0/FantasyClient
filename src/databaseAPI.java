@@ -23,7 +23,9 @@ public class databaseAPI
       int playerID = 0;
 
       firstName = firstName.replaceAll("[()\\s-]+", "");
+      firstName = firstName.replace("'","");
       lastName = lastName.replaceAll("[()\\s-]+", "");
+      lastName = lastName.replace("'","");
 
       Connection conn = null;
       Statement stmt = null;
@@ -33,11 +35,9 @@ public class databaseAPI
       Class.forName("com.mysql.jdbc.Driver");
 
       //STEP 3: Open a connection
-      System.out.println("Connecting to database...");
       conn = DriverManager.getConnection(DB_URL,USER,PASS);
 
       //STEP 4: Execute a query
-      System.out.println("Creating statement...");
       stmt = conn.createStatement();
       String query1;
       query1 = "SELECT playerID FROM Player where lastName='" + lastName + "' AND firstName='" + firstName + "';";
@@ -90,20 +90,18 @@ public class databaseAPI
       Statement stmt = null;
       try {
 
-      //STEP 2: Register JDBC driver
+      //Register JDBC driver
       Class.forName("com.mysql.jdbc.Driver");
 
-      //STEP 3: Open a connection
-      System.out.println("Connecting to database...");
+      //Open a connection
       conn = DriverManager.getConnection(DB_URL,USER,PASS);
 
-      //STEP 4: Execute a query
-      System.out.println("Creating statement...");
+      //Execute a query
       stmt = conn.createStatement();
 
       int updateStatus = stmt.executeUpdate(insertQuery);
 
-      //STEP 6: Clean-up environment
+      //Clean-up environment
       stmt.close();
       conn.close();
 
@@ -111,12 +109,12 @@ public class databaseAPI
 
       }  catch(SQLException se)
          {
-            //Handle errors for JDBC
-            se.printStackTrace();
+            System.out.println("Error.  Possible duplicate entry exists.");
          }  
          catch(Exception e)
          {
-            e.printStackTrace();
+            //e.printStackTrace();
+            System.out.println("Error2");
          }  
          finally
          {
@@ -125,14 +123,16 @@ public class databaseAPI
                   stmt.close();
             }  catch(SQLException se2)
                   {
-                     System.out.println("Exception thrown: " + se2.getStackTrace());
+                     //System.out.println("Exception thrown: " + se2.getStackTrace());
+                     System.out.println("Error3");
                   }
             try {
                if(conn!=null)
                   conn.close();
             }catch(SQLException se)
                {
-                  se.printStackTrace();
+                  System.out.println("Error4");
+                  //se.printStackTrace();
                }
          }
 
