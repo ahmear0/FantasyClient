@@ -84,6 +84,61 @@ public class databaseAPI
       return playerID;
    }
 
+   public static int insert_playerScores(String insertQuery)
+   {
+      Connection conn = null;
+      Statement stmt = null;
+      try {
+
+      //STEP 2: Register JDBC driver
+      Class.forName("com.mysql.jdbc.Driver");
+
+      //STEP 3: Open a connection
+      System.out.println("Connecting to database...");
+      conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+      //STEP 4: Execute a query
+      System.out.println("Creating statement...");
+      stmt = conn.createStatement();
+
+      int updateStatus = stmt.executeUpdate(insertQuery);
+
+      //STEP 6: Clean-up environment
+      stmt.close();
+      conn.close();
+
+      return updateStatus;
+
+      }  catch(SQLException se)
+         {
+            //Handle errors for JDBC
+            se.printStackTrace();
+         }  
+         catch(Exception e)
+         {
+            e.printStackTrace();
+         }  
+         finally
+         {
+            try {
+               if(stmt!=null)
+                  stmt.close();
+            }  catch(SQLException se2)
+                  {
+                     System.out.println("Exception thrown: " + se2.getStackTrace());
+                  }
+            try {
+               if(conn!=null)
+                  conn.close();
+            }catch(SQLException se)
+               {
+                  se.printStackTrace();
+               }
+         }
+
+         return -1;
+   }
+
    public static void main(String[] args)
 	{
 		KeyboardReader reader = new KeyboardReader();
