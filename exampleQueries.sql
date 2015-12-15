@@ -56,16 +56,6 @@ WHERE M.userName2 = 'Ron' AND
   	Opponent.userName = R.userName AND
   	M.week = 1 AND start=1);
 
-
-/* List players who accumulated some (non-zero) yardage in week 1 */
-select firstName, lastName, passYds, rushYds, recYds, retYds, passYds + rushYds + recYds + retYds as totalYds from playerScores Natural Join Player where week=11 AND passYds IS NOT NULL
-    -> UNION
-    -> (select firstName, lastName, passYds, rushYds, recYds, retYds, passYds + rushYds + recYds + retYds as totalYds from playerScores Natural Join Player where week=11 AND rushYds IS NOT NULL)
-    -> UNION
-    -> (select firstName, lastName, passYds, rushYds, recYds, retYds, passYds + rushYds + recYds + retYds as totalYds from playerScores Natural Join Player where week=11 AND recYds IS NOT NULL)
-    -> UNION
-    -> (select firstName, lastName, passYds, rushYds, recYds, retYds, passYds + rushYds + recYds + retYds as totalYds from playerScores Natural Join Player where week=11 AND retYds IS NOT NULL);
-
 /* List all wide recievers that play for the New England Patriots */
 SELECT playerID, firstName, lastName 
 FROM Player
@@ -79,4 +69,33 @@ WHERE position='RB'
 GROUP BY playerID 
 ORDER BY sum(rushYds) 
 DESC limit 10;
+
+/* List all teams (the week, their total recieving and passing yards) that have all recieving yards accounted for 
+by passing yards in the sql database
+for week 5 */
+SELECT teamName, week, recieving, passing 
+FROM
+	(SELECT teamName, week, sum(recYds) as recieving, sum(passYds) as passing
+	FROM playerScores Natural Join Player 
+	WHERE week=5
+	GROUP BY teamName) AS passCatch
+WHERE passCatch.recieving=passCatch.passing;
+
+
+/* List the current scores for Ron's week 8 starting lineup */
+SELECT rosterSpot, firstName, lastName, passYds, passTD, rushYds, rushTD, recYds, recTD, fLoss 
+FROM Rostered Natural Join playerScores Natural Join Player
+WHERE week=8
+AND userName='Ron'
+AND start=1;
+
+
+/* Remove all prior quarterback scores so that I can demonstrate the scrapeAPI in action */
+DELETE ps 
+FROM playerScores as ps Natural Join Player as p 
+WHERE ps.playerID=p.playerID AND p.position='QB';
+
+
+
+
 
