@@ -1,24 +1,82 @@
-//test.java
-
 import TerminalIO.KeyboardReader;
 import java.sql.*;
+import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 
 public class databaseAPI
 {
 
-	// JDBC driver name and database URL
-   static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";  
-   static final String DB_URL = "jdbc:mysql://localhost/Fantasy";
+	// JDBC driver name, url, credentials, query variables
+   private static String JDBC_DRIVER, DB_URL, USER, PASS;
+   private static ResultSet rs = null;
+   private static Connection conn = null;
+   private static Statement stmt = null;
 
-   //  Database credentials
-   static final String USER = "root";
-   static final String PASS = "YyJ=q7Hrv&l0";
+   //construct an instance of the databaseAPI
+   public databaseAPI()
+   { 
+      JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+      DB_URL = "jdbc:mysql://localhost/Fantasy";
+      USER = "root";
+      PASS = "YyJ=q7Hrv&l0";
+
+      startConnection();
+   }
+
+   public databaseAPI(String databaseUSERNAME, String databasePASSWORD)
+   { 
+      JDBC_DRIVER = "com.mysql.jdbc.Driver";  
+      DB_URL = "jdbc:mysql://localhost/Fantasy";
+      USER = databaseUSERNAME;
+      PASS = databasePASSWORD;
+
+      startConnection();
+   }
+
+   //the constructor method executes startConnection() at instantiation
+   //users cannot manually start a JDBC connection
+   private static void startConnection()
+   {
+      try 
+      {
+         //register the JDBC driver
+         Class.forName(JDBC_DRIVER);
+
+         conn = DriverManager.getConnection(DB_URL,USER,PASS);
 
 
-   //makes mysql query using connectorJ driver
-   //gets playerID using the player's name
-   //so that we can insert stats using playerID key
-   public static int getPlayerID(String firstName, String lastName)
+      }  catch (ClassNotFoundException jdbcDriverException)
+         {
+            System.out.println("Error: JDBC Driver not found." + jdbcDriverException.getStackTrace());
+         }
+
+         catch (SQLException connException)
+         {
+            System.out.println("Error: Connection did not start." + connException.getStackTrace());
+         }
+   }
+
+   //MUST end all connections after ALL queries have been made.
+   //Start and End once--need to start/end repeatedly
+   public void endConnection()
+   {
+      try {
+               if (stmt!=null)
+                  stmt.close();
+            }  catch (SQLException stmtException)
+                  {
+                     System.out.println("Error: Statement did not close." + stmtException.getStackTrace());
+                  }
+            try {
+               if (conn!=null)
+                  conn.close();
+            }catch (SQLException connException)
+               {
+                  System.out.println("Error: Connection did not close." + connException.getStackTrace());
+               }
+   }
+
+   public int getPlayerID(String firstName, String lastName)
    {
       int playerID = 0;
 
@@ -27,122 +85,257 @@ public class databaseAPI
       lastName = lastName.replaceAll("[()\\s-]+", "");
       lastName = lastName.replace("'","");
 
-      Connection conn = null;
-      Statement stmt = null;
-      try {
+      try 
+      {
+         stmt = conn.createStatement();
+         String SQL_Query;
 
-      //STEP 2: Register JDBC driver
-      Class.forName("com.mysql.jdbc.Driver");
+         SQL_Query = "SELECT playerID FROM Player where lastName='" + lastName + "' AND firstName='" + firstName + "';";
 
-      //STEP 3: Open a connection
-      conn = DriverManager.getConnection(DB_URL,USER,PASS);
+         rs = stmt.executeQuery(SQL_Query);
 
-      //STEP 4: Execute a query
-      stmt = conn.createStatement();
-      String query1;
-      query1 = "SELECT playerID FROM Player where lastName='" + lastName + "' AND firstName='" + firstName + "';";
-
-      ResultSet rs = stmt.executeQuery(query1);
-
-      //STEP 5: Extract data from result set
-      while(rs.next()){
-         //Retrieve by column name
-         playerID  = rs.getInt("playerID");
+         while(rs.next())
+         {
+            playerID  = rs.getInt("playerID");
          }
-
-      //STEP 6: Clean-up environment
-      rs.close();
-      stmt.close();
-      conn.close();
-      }  catch(SQLException se)
+         rs.close();
+      
+      }  catch(SQLException sqlException)
          {
-            //Handle errors for JDBC
-            se.printStackTrace();
+            sqlException.printStackTrace();
          }  
-         catch(Exception e)
+         catch(Exception exception)
          {
-            e.printStackTrace();
+            //general errors
+            exception.printStackTrace();
          }  
-         finally
-         {
-            try {
-               if(stmt!=null)
-                  stmt.close();
-            }  catch(SQLException se2)
-                  {
-                     System.out.println("Exception thrown: " + se2.getStackTrace());
-                  }
-            try {
-               if(conn!=null)
-                  conn.close();
-            }catch(SQLException se)
-               {
-                  se.printStackTrace();
-               }
-         }
 
       return playerID;
    }
 
-   public static int insert_playerScores(String insertQuery)
+   //make a SQL INSERT for player scores, per week
+   public int insert_playerScores(String insertQuery)
    {
-      Connection conn = null;
-      Statement stmt = null;
-      try {
+      int insertStatus = -1;
 
-      //Register JDBC driver
-      Class.forName("com.mysql.jdbc.Driver");
+      try 
+      {
+         stmt = conn.createStatement();
+         insertStatus = stmt.executeUpdate(insertQuery);
 
-      //Open a connection
-      conn = DriverManager.getConnection(DB_URL,USER,PASS);
-
-      //Execute a query
-      stmt = conn.createStatement();
-
-      int updateStatus = stmt.executeUpdate(insertQuery);
-
-      //Clean-up environment
-      stmt.close();
-      conn.close();
-
-      return updateStatus;
-
-      }  catch(SQLException se)
+      }  catch(SQLException sqlException)
          {
             System.out.println("Error.  Possible duplicate entry exists.");
          }  
-         catch(Exception e)
+         catch(Exception exception)
          {
-            //e.printStackTrace();
-            System.out.println("Error2");
+            //general errors
+            exception.printStackTrace();
          }  
-         finally
+      return insertStatus;
+   }
+
+   public double getPlayerPoints(int playerID, int week)
+   {
+      double points = 0.0;
+
+      try 
+      {
+         stmt = conn.createStatement();
+         String SQL_Query = "SELECT * FROM playerScores WHERE playerID=" + playerID + " AND week=" + week + ";";
+      
+         ResultSet rs = stmt.executeQuery(SQL_Query);
+
+         int passTD = 0, passPick = 0, rushTD = 0, recTD = 0, retTD = 0, fLoss = 0;
+         double passYds = 0.0, rushYds = 0.0, recYds = 0.0, retYds = 0.0;
+
+         //parse scores from result set
+         while(rs.next())
          {
-            try {
-               if(stmt!=null)
-                  stmt.close();
-            }  catch(SQLException se2)
-                  {
-                     //System.out.println("Exception thrown: " + se2.getStackTrace());
-                     System.out.println("Error3");
-                  }
-            try {
-               if(conn!=null)
-                  conn.close();
-            }catch(SQLException se)
-               {
-                  System.out.println("Error4");
-                  //se.printStackTrace();
-               }
+            passTD = rs.getInt("passTD");
+            passYds = rs.getDouble("passYds");
+            passPick = rs.getInt("passPick");
+            rushYds = rs.getDouble("rushYds");
+            rushTD = rs.getInt("rushTD");
+            recYds = rs.getDouble("recYds");
+            recTD = rs.getInt("recTD");
+            retYds = rs.getDouble("retYds");
+            retTD = rs.getInt("retTD");
+            fLoss = rs.getInt("fLoss");
          }
 
-         return -1;
+         points = 6.0*(passTD + rushTD + recTD + retTD) + 1.0*((passYds + retYds)/50.0) + 1.0*((recYds+rushYds)/10.0) - 2.0*(passPick + fLoss);
+
+      rs.close();
+
+      }  catch(SQLException sqlException)
+         {
+            sqlException.printStackTrace();
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+
+      return points;
    }
+
+   private ArrayList<Integer> getStartingLineupIDs(String userName)
+   {
+      ArrayList<Integer> startingLineupIDs = null;
+      try 
+      {
+         stmt = conn.createStatement();
+         String SQL_Query = "SELECT playerID FROM Rostered WHERE userName='" + userName + "' AND start=1;";
+      
+         ResultSet result = stmt.executeQuery(SQL_Query);
+
+         startingLineupIDs = new ArrayList<Integer>();
+
+         while(result.next())
+         {
+            startingLineupIDs.add((Integer)result.getInt("playerID"));
+         }
+
+         result.close();
+
+      }  catch(SQLException sqlException)
+         {
+            sqlException.printStackTrace();
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+      return startingLineupIDs;
+   }
+
+   public Object[][] getCurrentRoster(String userName)
+   {
+      ResultSet roster = null;
+      DefaultTableModel dtm = null;
+      ArrayList rosterElements = new ArrayList(70);
+      Object [][] data = null;
+      try 
+      {
+         stmt = conn.createStatement();
+         String SQL_Query = "SELECT playerID, start, position, firstName, lastName FROM Rostered NATURAL JOIN Player WHERE userName='" + userName + "' ORDER BY start DESC;";
+      
+         ResultSet result = stmt.executeQuery(SQL_Query);
+
+         dtm = new DefaultTableModel();
+
+         ResultSetMetaData meta = result.getMetaData();
+         int numCols = meta.getColumnCount();
+
+         while(result.next())
+         {
+            Object [] rowData = new Object[numCols];
+            for (int i = 0; i < rowData.length; ++i)
+            {
+               rosterElements.add(result.getObject(i+1));
+            }
+         }
+         int numRows = rosterElements.size()/numCols;
+
+         data = new Object[numRows][numCols];
+         int j=0;
+         for (int x = 0; x<numRows; x++)
+         {
+            for (int y = 0; y<numCols; y++)
+            {
+               data[x][y] = rosterElements.get(j);
+               j++;
+            }
+         }
+
+         result.close();
+
+      }  catch(SQLException sqlException)
+         {
+            sqlException.printStackTrace();
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+      return data;
+   }    
+
+
+   public double scoreStartingLineup(String userName, int week)
+   {
+      double teamScore = 0.0;
+      ArrayList<Integer> lineupIDs = getStartingLineupIDs(userName);
+
+      for (int i = 0; i<lineupIDs.size(); i++)
+      {
+         teamScore += getPlayerPoints(lineupIDs.get(i).intValue(), week);
+      }
+      return teamScore;
+   }
+
+   public int updateMatchup(String matchupString)
+   {
+      int insertStatus = -1;
+      try 
+      {
+         stmt = conn.createStatement();
+         insertStatus = stmt.executeUpdate(matchupString);
+
+      }  catch(SQLException sqlException)
+         {
+            System.out.println("Error.  Possible duplicate entry exists.");
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+      return insertStatus;
+
+   }
+
+   public ArrayList<String> getFantasyTeams()
+   {
+      ArrayList<String> fantasyTeams = null;
+      try 
+      {
+         stmt = conn.createStatement();
+         String SQL_Query = "SELECT userName from FantasyTeam;";
+      
+         ResultSet result = stmt.executeQuery(SQL_Query);
+
+         fantasyTeams = new ArrayList<String>(10);
+
+         while(result.next())
+         {
+            fantasyTeams.add((String)result.getString("userName"));
+         }
+         result.close();
+
+      }  catch(SQLException sqlException)
+         {
+            sqlException.printStackTrace();
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+      return fantasyTeams; 
+   }
+
 
    public static void main(String[] args)
 	{
 		KeyboardReader reader = new KeyboardReader();
-		
+
+		databaseAPI database = new databaseAPI();
+      ArrayList<Integer> lineup = database.getStartingLineupIDs("Asheq");
 		String first = "";
 		String last = "";
       System.out.print("Enter First Name: ");
@@ -150,8 +343,18 @@ public class databaseAPI
       System.out.print("Enter Last Name: ");
       last = reader.readLine();
 
-      int playerID = getPlayerID(first, last);
+      int playerID = database.getPlayerID(first, last);
 
       System.out.println("PlayerID is: " + playerID);
+      int week = 1;
+      System.out.println("He scored " + database.getPlayerPoints(playerID, week) + " points in week " + week);
+
+      System.out.println(lineup.get(0) + ", " + lineup.get(6));
+
+      double week12score = database.scoreStartingLineup("Asheq",12);
+
+      System.out.println("Asheq scored " + week12score + " points in week 12");
+
+      database.endConnection();
    }
 }
