@@ -8,6 +8,14 @@ CREATE TABLE Matchup (week int(2) NOT NULL, userName1 varchar(20) NOT NULL, scor
 
 CREATE TABLE Rostered (start int(1), rosterSpot enum('QB','RB','WR','TE'), playerID int(5)  NOT NULL, userName varchar(20) NOT NULL, CHECK(start>=0), CHECK(start<2), Primary Key (playerID), Foreign Key (playerID) REFERENCES Player(playerID), Foreign Key (userName) REFERENCES FantasyTeam(userName));
 
+create table s 
+(start int(1) NOT NULL, 
+userName varchar(20) NOT NULL,
+PRIMARY KEY (start, userName),
+ Foreign Key (userName) REFERENCES FantasyTeam(userName));
+
+INSERT INTO s VALUES(1,'Tekin');
+
 CREATE TABLE playerScores 
 (week int(2) not null, 
 passYds int(3),
@@ -40,3 +48,64 @@ UNION
 (select firstName, lastName, passYds, rushYds, recYds, retYds, passYds + rushYds + recYds + retYds as totalYds from playerScores Natural Join Player where week=11 AND retYds IS NOT NULL);
 
 (select * from playerScores where passYds IS NULL AND rushYds IS NULL AND recYds IS NULL AND retYds IS NULL);
+
+
+
+create view roster1 as 
+select playerID, position from Player where position='WR' AND firstName='Brandon' AND lastName='Marshall'
+UNION
+(select playerID, position from Player where position='WR' AND firstName='Alshon' AND lastName='Jeffery')
+UNION
+(select playerID, position from Player where position='WR' AND firstName='Dez' AND lastName='Bryant')
+UNION
+(select playerID, position from Player where position='RB' AND firstName='Latavius' AND lastName='Murray')
+UNION
+(select playerID, position from Player where position='RB' AND firstName='Ronnie' AND lastName='Hillman')
+UNION
+(select playerID, position from Player where position='TE' AND firstName='Greg' AND lastName='Olsen')
+UNION
+(select playerID, position from Player where position='QB' AND firstName='Aaron' AND lastName='Rodgers');
+
+
+/* */
+
+create view misha as
+select playerID, position from Player where position='WR' AND firstName='Michael' AND lastName='Floyd'
+UNION
+(select playerID, position from Player where position='WR' AND firstName='Tavon' AND lastName='Austin')
+UNION
+(select playerID, position from Player where position='WR' AND firstName='James' AND lastName='Jones')
+UNION
+(select playerID, position from Player where position='RB' AND firstName='Doug' AND lastName='Martin')
+UNION
+(select playerID, position from Player where position='RB' AND firstName='Andre' AND lastName='Williams')
+UNION
+(select playerID, position from Player where position='TE' AND firstName='Rob' AND lastName='Gronkowski')
+UNION
+(select playerID, position from Player where position='QB' AND firstName='Marcus' AND lastName='Mariota');
+
+
+
+
+create view lol2 as (select start, position, playerID, userName from s, roster1);
+
+Insert Into Rostered values(select * from lol1);
+
+
+SELECT *
+FROM lol1
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n';
+
+
+
+1,WR,44921,Tekin
+1,WR,89782,Tekin
+1,WR,64969,Tekin
+1,RB,94671,Tekin
+1,RB,69534,Tekin
+1,TE,46005,Tekin
+1,QB,45102,Tekin
+
+
