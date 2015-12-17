@@ -1,6 +1,8 @@
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -16,59 +18,82 @@ import javax.swing.JTable;
 import javax.swing.JTabbedPane;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.ImageIcon;
 
-public class FantasyClient {
+public class FantasyClient extends JFrame implements ActionListener {
 
-    JMenuBar fantasyMenu;
-    String clientUser;
+    public final static String clientUser = "Asheq";
+    private static Object [][] playerData;
+    private static JButton refreshButton;
+    private static databaseAPI database;
+    private static RosterPanel rosterTab;
+    private static JPanel matchupTab, playerTab;
+
+    public FantasyClient(String title) {
+
+    super(title);
+        // set flow layout for the frame
+    this.getContentPane().setLayout(new FlowLayout());
+
+    JButton button1 = new JButton("Refresh");
+
+    //set action listeners for buttons
+    button1.addActionListener(this);
+
+    //add buttons to the frame
+    add(button1);
+
+    }
 
     //protected void initUI() {
     public static void main(String args[]){
 
+        database = new databaseAPI();
 
-        databaseAPI database = new databaseAPI();
-
-        final JFrame frame = new JFrame("Fantasy Football Client, Fall 2015");
+        final JFrame frame = new FantasyClient("Fantasy Football Client, Fall 2015");
 
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        JPanel rosterTab = new JPanel();
-        JPanel matchupTab = new JPanel();
-        JPanel playersTab = new JPanel();
-        
+        rosterTab = new RosterPanel(database, clientUser);
+        matchupTab = new JPanel();
+        playerTab = new JPanel();
         JTabbedPane tabPanel = new JTabbedPane();
 
-        String [] rosterColumns = new String[5];
-        Object [][] ronRosterData = database.getCurrentRoster("Ron");
-        Object [][] asheqRosterData = database.getCurrentRoster("Asheq");
+        //playerTAB
+        String [] playerColumns = new String[4];
+        playerColumns[0]="Position";
+        playerColumns[1]="Team";
+        playerColumns[2]="First";
+        playerColumns[3]="Last";
 
-        rosterColumns[0]="Player ID";
-        rosterColumns[1]="Start/Bench";
-        rosterColumns[2]="Position";
-        rosterColumns[3]="First";
-        rosterColumns[4]="Last";
+        playerData = database.getPlayers();
+        JTable playerTable = new JTable(new DefaultTableModel(playerData,playerColumns));
+        JScrollPane playerContainer = new JScrollPane(playerTable);
+        playerTab.add(playerContainer, BorderLayout.CENTER);
 
-        JTable RonRoster = new JTable(new DefaultTableModel(ronRosterData,rosterColumns));
-        JTable AsheqRoster = new JTable(new DefaultTableModel(asheqRosterData,rosterColumns));
-
-        JScrollPane tableContainer = new JScrollPane(AsheqRoster);
-
-        rosterTab.add(tableContainer, BorderLayout.CENTER);
         tabPanel.addTab("Roster",rosterTab);
         tabPanel.addTab("Matchup",matchupTab);
-        tabPanel.addTab("playersTab",playersTab);
+        tabPanel.addTab("Players",playerTab);
+
         tabPanel.setVisible(true);
-
-        AsheqRoster.revalidate();
-
-        tableContainer.setVisible(true);
+        // rosterContainer.setVisible(true);
+        // playerContainer.setVisible(true);
 
         frame.getContentPane().add(tabPanel);
-
         frame.pack(); 
         frame.setBackground(Color.white);
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent ae) 
+    {
+        String action = ae.getActionCommand();
+        if (action.equals("Refresh")) {
+            rosterTab.refresh();
+            System.out.println("action has been performed");
+            rosterTab.revalidate();
+        }
+    }
 }
