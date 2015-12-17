@@ -7,12 +7,12 @@ public class patch {
 
         // The name of the file to open.
 
-	String fileName = "week1.csv";
+	String fileName = "NewRosters.csv";
 	String mod_fileName = "mod_" + fileName;
 	
         // This will reference one line at a time
         String line = null;
-	String table = "week1pass";
+	String table = "Rostered";
 	String header = "INSERT INTO " + table + " VALUES(";
 	String footer = ");";
 	String newLine = null;
