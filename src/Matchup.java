@@ -8,19 +8,34 @@ public class Matchup {
     public static void main(String[] args)
     {
     	database = new databaseAPI();
-    	scoreMatchup("Asheq","Ron",1);
-    	
+
+    	scoreWeeklyMatchups(1);
     	database.endConnection();
     }
 
-    public static String scoreMatchup(String userName1, String userName2, int week)
+
+    public static void scoreWeeklyMatchups(int week)
+    {
+        String matchupQuery = "SELECT userName1, userName2 FROM Matchup where week=" + week + ";";
+        String[][] headToHead = database.getHeadToHead(matchupQuery);
+
+        for(int k = 0; k<5; k++)
+        {
+            String userName1 = headToHead[k][0];
+            String userName2 = headToHead[k][1];
+            
+            scoreMatchup(userName1,userName2,week);
+            System.out.println();
+        }
+    }
+
+    private static void scoreMatchup(String userName1, String userName2, int week)
     {
     	double score1 = database.scoreStartingLineup(userName1, week);
     	double score2 = database.scoreStartingLineup(userName2, week);
 
-    	String matchupScore = "REPLACE INTO Matchup VALUES(" + week + ",'" + userName1 + "'," + score1 + ",'" + userName2 + "'," + score2 + ");";
+    	String matchupScore = "UPDATE Matchup SET score1=" + score1 + ", score2=" + score2 + " WHERE userName1='" + userName1 + "' AND week=" + week + ");";
     	database.updateMatchup(matchupScore);
-    	return matchupScore;
     }
 
     public static ArrayList<String> pairFantasyTeams(int week)

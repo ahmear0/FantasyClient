@@ -181,6 +181,39 @@ public class databaseAPI
       return points;
    }
 
+   public String[][] getHeadToHead(String matchupQuery)
+   {
+      String[][] headToHead = null;
+      try 
+      {
+         stmt = conn.createStatement();
+         
+         ResultSet result = stmt.executeQuery(matchupQuery);
+
+         headToHead = new String[5][2];
+
+         int i = 0;
+         while(result.next())
+         {
+            headToHead[i][0] = result.getString("userName1");
+            headToHead[i][1] = result.getString("userName2");
+            i++;
+         }
+
+         result.close();
+
+      }  catch(SQLException sqlException)
+         {
+            sqlException.printStackTrace();
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+      return headToHead;
+   }
+
    private ArrayList<Integer> getStartingLineupIDs(String userName)
    {
       ArrayList<Integer> startingLineupIDs = null;
@@ -265,6 +298,58 @@ public class databaseAPI
       return data;
    }    
 
+   public Object[][] getPlayers()
+   {
+      ResultSet roster = null;
+      DefaultTableModel dtm = null;
+      ArrayList players = new ArrayList(400);
+      Object [][] data = null;
+      try 
+      {
+         stmt = conn.createStatement();
+         String SQL_Query = "SELECT position, teamName, firstName, lastName FROM Player LIMIT 50;";
+      
+         ResultSet result = stmt.executeQuery(SQL_Query);
+
+         dtm = new DefaultTableModel();
+
+         ResultSetMetaData meta = result.getMetaData();
+         int numCols = meta.getColumnCount();
+
+         while(result.next())
+         {
+            Object [] rowData = new Object[numCols];
+            for (int i = 0; i < rowData.length; ++i)
+            {
+               players.add(result.getObject(i+1));
+            }
+         }
+         int numRows = players.size()/numCols;
+
+         data = new Object[numRows][numCols];
+         int j=0;
+         for (int x = 0; x<numRows; x++)
+         {
+            for (int y = 0; y<numCols; y++)
+            {
+               data[x][y] = players.get(j);
+               j++;
+            }
+         }
+
+         result.close();
+
+      }  catch(SQLException sqlException)
+         {
+            sqlException.printStackTrace();
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+      return data;
+   }
 
    public double scoreStartingLineup(String userName, int week)
    {
