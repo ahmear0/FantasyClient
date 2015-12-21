@@ -117,7 +117,6 @@ public class FantasyClient extends JFrame implements ActionListener {
         	refreshButton.setBackground((Color.BLUE));
             rosterTab.refresh();
             validate();
-            System.out.println("action has been performed");
         }
         else if (action.equals("Scrape"))
         {

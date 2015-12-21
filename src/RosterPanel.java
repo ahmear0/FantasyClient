@@ -13,6 +13,7 @@ class RosterPanel extends JPanel {
     private static Object [][] rosterData;
     private static databaseAPI database;
     private String clientUser;
+    private String[] rosterColumns;
     private JTable roster;
     private JScrollPane rosterContainer;
 
@@ -21,19 +22,14 @@ class RosterPanel extends JPanel {
         database = _database;
         clientUser = _clientUser;
 
-        tabulate();
-    }
-
-    private void tabulate()
-    {
-        String [] rosterColumns = new String[5];
-        rosterData = database.getCurrentRoster(clientUser);
-
+        rosterColumns = new String[5];
         rosterColumns[0]="Player ID";
         rosterColumns[1]="Start/Bench";
         rosterColumns[2]="Position";
         rosterColumns[3]="First";
         rosterColumns[4]="Last";
+
+        rosterData = database.getCurrentRoster(clientUser);
 
         roster = new JTable(new DefaultTableModel(rosterData,rosterColumns));
         roster.setRowHeight(25);
@@ -46,23 +42,16 @@ class RosterPanel extends JPanel {
         return new Dimension(250,200);
     }
 
-    public void paintComponent(Graphics g) {
-    	refresh();
-        super.paintComponent(g);
-        System.out.println("Entered RosterPanel Paint Component Method");
-        } 
-
     public void refresh()
     {  
-        System.out.println("RosterPanel entered the Refresh Method");
         rosterData = database.getCurrentRoster(clientUser);
-        int numRostered = rosterData.length;
-        for (int i = 0; i<numRostered; i++)
-        {
-            System.out.print(rosterData[i][0] + " ");
-        }
-        System.out.println();
-        tabulate();
-        //this.repaint();
+
+        roster = new JTable(new DefaultTableModel(rosterData,rosterColumns));
+        roster.setRowHeight(25);
+
+        rosterContainer = new JScrollPane(roster);
+        this.removeAll();
+        add(rosterContainer, BorderLayout.CENTER);
+        this.updateUI();
     }
 }
