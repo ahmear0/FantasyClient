@@ -208,7 +208,7 @@ public class databaseAPI
          }  
          catch(Exception exception)
          {
-            //general errors
+            //general errors*.
             exception.printStackTrace();
          }  
       return headToHead;
@@ -249,7 +249,7 @@ public class databaseAPI
    {
       ResultSet roster = null;
       DefaultTableModel dtm = null;
-      ArrayList rosterElements = new ArrayList(70);
+      ArrayList<Object> rosterElements = new ArrayList<Object>(70);
       Object [][] data = null;
       try 
       {
@@ -302,7 +302,7 @@ public class databaseAPI
    {
       ResultSet roster = null;
       DefaultTableModel dtm = null;
-      ArrayList players = new ArrayList(400);
+      ArrayList<Object> players = new ArrayList<Object>(400);
       Object [][] data = null;
       try 
       {
@@ -413,7 +413,6 @@ public class databaseAPI
          }  
       return fantasyTeams; 
    }
-
 
    public static void main(String[] args)
 	{

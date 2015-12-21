@@ -13,22 +13,20 @@ import java.util.Map;
 public class scrapeAPI {
 
     private static databaseAPI database;
-
-    public static void main(String[] args)
+    
+    public static void scrapeTheWeek(int week)
     {
-        database = new databaseAPI();
-
-        String position = "QB";
-        for (int k = 1; k<=13; k++)
-        {
-            System.out.println("Scraping " + position + " stats from week " + k + ".");
-            scrape(k, position, 100);
-        }
-
+    	database = new databaseAPI();
+    	
+    	scrape(week, "QB", 100);
+        scrape(week, "RB", 100);
+        scrape(week, "WR", 150);
+        scrape(week, "TE", 100);
+        
         database.endConnection();
     }
 
-    public static void scrape(int week, String position, int rows)
+    private static int scrape(int week, String position, int rows)
     {
         //player attributes
         String lastName, firstName;
@@ -193,6 +191,8 @@ public class scrapeAPI {
         finally {
             driver.close();
         }
+		
+		return 1;
     }
 
 }

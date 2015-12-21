@@ -47,8 +47,10 @@ class RosterPanel extends JPanel {
     }
 
     public void paintComponent(Graphics g) {
-        super.paintComponent(g);     
-    } 
+    	refresh();
+        super.paintComponent(g);
+        System.out.println("Entered RosterPanel Paint Component Method");
+        } 
 
     public void refresh()
     {  
@@ -61,5 +63,6 @@ class RosterPanel extends JPanel {
         }
         System.out.println();
         tabulate();
+        //this.repaint();
     }
 }
