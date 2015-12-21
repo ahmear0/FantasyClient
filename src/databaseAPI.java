@@ -414,30 +414,110 @@ public class databaseAPI
       return fantasyTeams; 
    }
 
+   public Object[][] getStandings()
+   {
+      ResultSet resultSet = null;
+      DefaultTableModel dtm = null;
+
+      ArrayList<Object> standings = new ArrayList<Object>(30);
+      Object [][] data = null;
+      try 
+      {
+         stmt = conn.createStatement();
+         String SQL_Query = "SELECT FantasyTeam, Win, Loss from lossTable Natural Join winTable ORDER BY (Win) DESC;";
+      
+         ResultSet result = stmt.executeQuery(SQL_Query);
+
+         dtm = new DefaultTableModel();
+
+         ResultSetMetaData meta = result.getMetaData();
+         int numCols = meta.getColumnCount();
+
+         while(result.next())
+         {
+            Object [] rowData = new Object[numCols];
+            for (int i = 0; i < rowData.length; ++i)
+            {
+               standings.add(result.getObject(i+1));
+            }
+         }
+         int numRows = standings.size()/numCols;
+
+         data = new Object[numRows][numCols];
+         int j=0;
+         for (int x = 0; x<numRows; x++)
+         {
+            for (int y = 0; y<numCols; y++)
+            {
+               data[x][y] = standings.get(j);
+               j++;
+            }
+         }
+
+         result.close();
+
+      }  catch(SQLException sqlException)
+         {
+            sqlException.printStackTrace();
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+      return data;
+   }
+
+   private int createStandingsTables()
+   {
+      int insertStatus = -1;
+      String insertWinTable = "CREATE VIEW winTable AS (SELECT table1.winner as FantasyTeam, count(table1.winner) as Win FROM ( SELECT userName1 as winner, score1 as winScore FROM Matchup WHERE score1>score2 UNION (SELECT userName2 as winner, score2 as winScore FROM Matchup WHERE score2>score1)) as table1 GROUP BY (table1.winner));";
+
+      String insertLossTable = "CREATE VIEW lossTable AS (SELECT table2.loser as FantasyTeam, count(table2.loser) as Loss FROM (SELECT userName1 as loser, score1 as lossScore FROM Matchup WHERE score1<score2 UNION (SELECT userName2 as loser, score2 as lossScore FROM Matchup WHERE score2<score1)) as table2 GROUP BY (table2.loser));";
+      try 
+      {
+         stmt = conn.createStatement();
+         insertStatus = stmt.executeUpdate(insertWinTable);
+         insertStatus = stmt.executeUpdate(insertLossTable);
+
+      }  catch(SQLException sqlException)
+         {
+            System.out.println("Error.  Possible duplicate entry exists.");
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+      return insertStatus;
+   }
+
    public static void main(String[] args)
 	{
 		KeyboardReader reader = new KeyboardReader();
 
 		databaseAPI database = new databaseAPI();
-      ArrayList<Integer> lineup = database.getStartingLineupIDs("Asheq");
-		String first = "";
-		String last = "";
-      System.out.print("Enter First Name: ");
-      first = reader.readLine();
-      System.out.print("Enter Last Name: ");
-      last = reader.readLine();
 
-      int playerID = database.getPlayerID(first, last);
+      database.createStandingsTables();
+  //     ArrayList<Integer> lineup = database.getStartingLineupIDs("Asheq");
+		// String first = "";
+		// String last = "";
+  //     System.out.print("Enter First Name: ");
+  //     first = reader.readLine();
+  //     System.out.print("Enter Last Name: ");
+  //     last = reader.readLine();
 
-      System.out.println("PlayerID is: " + playerID);
-      int week = 1;
-      System.out.println("He scored " + database.getPlayerPoints(playerID, week) + " points in week " + week);
+  //     int playerID = database.getPlayerID(first, last);
 
-      System.out.println(lineup.get(0) + ", " + lineup.get(6));
+  //     System.out.println("PlayerID is: " + playerID);
+  //     int week = 1;
+  //     System.out.println("He scored " + database.getPlayerPoints(playerID, week) + " points in week " + week);
 
-      double week12score = database.scoreStartingLineup("Asheq",12);
+  //     System.out.println(lineup.get(0) + ", " + lineup.get(6));
 
-      System.out.println("Asheq scored " + week12score + " points in week 12");
+  //     double week12score = database.scoreStartingLineup("Asheq",12);
+
+  //     System.out.println("Asheq scored " + week12score + " points in week 12");
 
       database.endConnection();
    }
