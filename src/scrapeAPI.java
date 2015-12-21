@@ -1,12 +1,9 @@
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.support.ui.Select;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,8 +51,6 @@ public class scrapeAPI {
 
 		try 
         {
-			String statisticsURL = "http://sports.yahoo.com/nfl/stats/byposition?pos=RB";
-
             String statsURL = "http://sports.yahoo.com/nfl/stats/byposition?pos=" + position + "&conference=NFL&year=season_2015&timeframe=Week" + week;
             driver.get(statsURL);
 

@@ -1,16 +1,14 @@
 import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
-import javax.swing.BorderFactory;
-import java.awt.Color;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.Graphics;
 import javax.swing.table.DefaultTableModel;
 
 class RosterPanel extends JPanel {
 
-    private static Object [][] rosterData;
+	private static final long serialVersionUID = 926370490364625738L;
+	private static Object [][] rosterData;
     private static databaseAPI database;
     private String clientUser;
     private String[] rosterColumns;

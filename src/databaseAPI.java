@@ -1,12 +1,16 @@
 import TerminalIO.KeyboardReader;
-import java.sql.*;
-import javax.swing.table.DefaultTableModel;
+import java.sql.DriverManager;
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class databaseAPI
 {
 
-	// JDBC driver name, url, credentials, query variables
+	// JDBC driver name, URL, credentials, query variables
    private static String JDBC_DRIVER, DB_URL, USER, PASS;
    private static ResultSet rs = null;
    private static Connection conn = null;
@@ -247,8 +251,7 @@ public class databaseAPI
 
    public Object[][] getCurrentRoster(String userName)
    {
-      ResultSet roster = null;
-      DefaultTableModel dtm = null;
+
       ArrayList<Object> rosterElements = new ArrayList<Object>(70);
       Object [][] data = null;
       try 
@@ -257,8 +260,6 @@ public class databaseAPI
          String SQL_Query = "SELECT playerID, start, position, firstName, lastName FROM Rostered NATURAL JOIN Player WHERE userName='" + userName + "' ORDER BY start DESC;";
       
          ResultSet result = stmt.executeQuery(SQL_Query);
-
-         dtm = new DefaultTableModel();
 
          ResultSetMetaData meta = result.getMetaData();
          int numCols = meta.getColumnCount();
@@ -300,8 +301,6 @@ public class databaseAPI
 
    public Object[][] getPlayers()
    {
-      ResultSet roster = null;
-      DefaultTableModel dtm = null;
       ArrayList<Object> players = new ArrayList<Object>(400);
       Object [][] data = null;
       try 
@@ -310,8 +309,6 @@ public class databaseAPI
          String SQL_Query = "SELECT position, teamName, firstName, lastName FROM Player LIMIT 50;";
       
          ResultSet result = stmt.executeQuery(SQL_Query);
-
-         dtm = new DefaultTableModel();
 
          ResultSetMetaData meta = result.getMetaData();
          int numCols = meta.getColumnCount();
@@ -416,9 +413,6 @@ public class databaseAPI
 
    public Object[][] getStandings()
    {
-      ResultSet resultSet = null;
-      DefaultTableModel dtm = null;
-
       ArrayList<Object> standings = new ArrayList<Object>(30);
       Object [][] data = null;
       try 
@@ -427,8 +421,6 @@ public class databaseAPI
          String SQL_Query = "SELECT FantasyTeam, Win, Loss from lossTable Natural Join winTable ORDER BY (Win) DESC;";
       
          ResultSet result = stmt.executeQuery(SQL_Query);
-
-         dtm = new DefaultTableModel();
 
          ResultSetMetaData meta = result.getMetaData();
          int numCols = meta.getColumnCount();
@@ -494,31 +486,30 @@ public class databaseAPI
 
    public static void main(String[] args)
 	{
-		KeyboardReader reader = new KeyboardReader();
+KeyboardReader reader = new KeyboardReader();
 
-		databaseAPI database = new databaseAPI();
+databaseAPI database = new databaseAPI();
 
-      database.createStandingsTables();
-  //     ArrayList<Integer> lineup = database.getStartingLineupIDs("Asheq");
-		// String first = "";
-		// String last = "";
-  //     System.out.print("Enter First Name: ");
-  //     first = reader.readLine();
-  //     System.out.print("Enter Last Name: ");
-  //     last = reader.readLine();
+database.createStandingsTables();
+ArrayList<Integer> lineup = database.getStartingLineupIDs("Asheq");
+String first = "";
+String last = "";
+System.out.print("Enter First Name: ");
+first = reader.readLine();
+System.out.print("Enter Last Name: ");
+last = reader.readLine();
 
-  //     int playerID = database.getPlayerID(first, last);
+int playerID = database.getPlayerID(first, last);
 
-  //     System.out.println("PlayerID is: " + playerID);
-  //     int week = 1;
-  //     System.out.println("He scored " + database.getPlayerPoints(playerID, week) + " points in week " + week);
+System.out.println("PlayerID is: " + playerID);
+int week = 1;
+System.out.println("He scored " + database.getPlayerPoints(playerID, week) + " points in week " + week);
 
-  //     System.out.println(lineup.get(0) + ", " + lineup.get(6));
+System.out.println(lineup.get(0) + ", " + lineup.get(6));
 
-  //     double week12score = database.scoreStartingLineup("Asheq",12);
+double week12score = database.scoreStartingLineup("Asheq",12);
 
-  //     System.out.println("Asheq scored " + week12score + " points in week 12");
-
-      database.endConnection();
+System.out.println("Asheq scored " + week12score + " points in week 12");
+database.endConnection();
    }
 }
