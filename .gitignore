@@ -1,3 +1,4 @@
+#class-related ignores
 gradedPart2.pdf
 
 #binary files
@@ -6,3 +7,7 @@ gradedPart2.pdf
 #assignment files
 *.docx
 *.doc
+
+#eclipse-related files
+*.classpath
+*.project
