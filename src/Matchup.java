@@ -9,7 +9,24 @@ public class Matchup {
     {
     	database = new databaseAPI();
 
-    	scoreWeeklyMatchups(1);
+        for (int i = 1; i<13; i++)
+        {
+    	   scoreWeeklyMatchups(i);
+        }
+        // String userName1 = "Kamil";
+        // String userName2 = "Koyuturk";
+        // int week = 6;
+        // double score1 = database.scoreStartingLineup(userName1, week);
+        // double score2 = database.scoreStartingLineup(userName2, week);
+
+        
+
+        // System.out.println("Kamil: " + score1 + ", Koyuturk: " + score2);
+
+        // String matchupScore = "UPDATE Matchup SET score1=" + score1 + ", score2=" + score2 + " WHERE userName1='" + userName1 + "' AND week=" + week + ";";
+
+        // System.out.println(matchupScore);
+
     	database.endConnection();
     }
 
@@ -23,9 +40,7 @@ public class Matchup {
         {
             String userName1 = headToHead[k][0];
             String userName2 = headToHead[k][1];
-            
             scoreMatchup(userName1,userName2,week);
-            System.out.println();
         }
     }
 
@@ -34,7 +49,7 @@ public class Matchup {
     	double score1 = database.scoreStartingLineup(userName1, week);
     	double score2 = database.scoreStartingLineup(userName2, week);
 
-    	String matchupScore = "UPDATE Matchup SET score1=" + score1 + ", score2=" + score2 + " WHERE userName1='" + userName1 + "' AND week=" + week + ");";
+    	String matchupScore = "UPDATE Matchup SET score1=" + score1 + ", score2=" + score2 + " WHERE userName1='" + userName1 + "' AND week=" + week + ";";
     	database.updateMatchup(matchupScore);
     }
 
