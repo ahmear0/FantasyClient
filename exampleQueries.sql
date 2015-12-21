@@ -13,7 +13,81 @@ WHERE week=1 AND score1>score2
 UNION 
 (SELECT userName2, score2
 FROM Matchup
-WHERE week=1 AND score2>score1)
+WHERE week=1 AND score2>score1);
+
+/*Teams and their number of losses */
+CREATE VIEW lossTable AS (
+SELECT table2.loser as FantasyTeam, count(table2.loser) as Loss FROM 
+(
+SELECT userName1 as loser, score1 as lossScore
+FROM Matchup
+WHERE score1<score2 
+UNION 
+(SELECT userName2 as loser, score2 as lossScore
+FROM Matchup
+WHERE score2<score1)) as table2
+ GROUP BY (table2.loser));
+
+/*Teams and their number of wins */
+CREATE VIEW winTable AS (
+SELECT table1.winner as FantasyTeam, count(table1.winner) as Win FROM 
+(
+SELECT userName1 as winner, score1 as winScore
+FROM Matchup
+WHERE score1>score2 
+UNION 
+(SELECT userName2 as winner, score2 as winScore
+FROM Matchup
+WHERE score2>score1)) as table1
+ GROUP BY (table1.winner));
+
+/*List standings */
+SELECT FantasyTeam, Win, Loss FROM lossTable Natural Join winTable ORDER BY (Win) DESC;
+
+
+
+
+/*Standings*/
+SELECT FantasyTeam.winTable, Win.winTable, Loss.lossTable 
+FROM 
+(SELECT table2.loser as FantasyTeam, count(table2.loser) as Loss FROM 
+(
+SELECT userName1 as loser, score1 as winScore
+FROM Matchup
+WHERE score1<score2 
+UNION 
+(SELECT userName2 as loser, score2 as winScore
+FROM Matchup
+WHERE score2<score1)) as table2
+ GROUP BY (table2.loser)) as lossTable NATURAL JOIN
+
+(SELECT table1.winner as FantasyTeam, count(table1.winner) as Win 
+  FROM 
+  (
+  SELECT userName1 as winner, score1 as winScore
+  FROM Matchup
+  WHERE score1>score2 
+    UNION 
+    (
+      SELECT userName2 as winner, score2 as winScore
+      FROM Matchup
+      WHERE score2>score1)
+    ) 
+  as table1
+  GROUP BY (table1.winner)
+ ) as winTable;
+
+
+CREATE VIEW (SELECT loser as FantasyTeam, count(loser) as Loss FROM 
+(
+SELECT userName1 as loser, score1 as lossScore
+FROM Matchup
+WHERE score1<score2 
+UNION 
+(SELECT userName2 as loser, score2 as lossScore
+FROM Matchup
+WHERE score2<score1))
+ GROUP BY (loser)) as lossTable;
 
 
 /* Which professional teams do Ron's players belong to?
