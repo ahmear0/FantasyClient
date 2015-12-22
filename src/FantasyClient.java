@@ -19,7 +19,6 @@ import java.lang.NumberFormatException;
 
 public class FantasyClient extends JFrame {
 	
-	private static final long serialVersionUID = 8008367570604652741L;
 	private static String clientUser;
     private static boolean isAdmin = true;
     private static String adminString = "";
