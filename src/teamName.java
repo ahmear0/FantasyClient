@@ -1,43 +1,53 @@
 public enum teamName {
 
-	CIN,
-	PIT,
-	CLE,
-	BAL,
+	CIN("CIN"),
+	PIT("PIT"),
+	CLE("CLE"),
+	BAL("BAL"),
 
-	BUF,
-	NWE,
-	NYJ,
-	MIA,
+	BUF("BUF"),
+	NWE("NWE"),
+	NYJ("NYJ"),
+	MIA("MIA"),
 
-	JAC,
-	TEN,
-	HOU,
-	IND,
+	JAX("JAX"),
+	TEN("TEN"),
+	HOU("HOU"),
+	IND("IND"),
 
-	KAN,
-	DEN,
-	OAK,
-	SDG,
+	KAN("KAN"),
+	DEN("DEN"),
+	OAK("OAK"),
+	SDG("SDG"),
 
-	DET,
-	GNB,
-	CHI,
-	MIN,
+	DET("DET"),
+	GNB("GNB"),
+	CHI("CHI"),
+	MIN("MIN"),
 
-	WAS,
-	PHI,
-	NYG,
-	DAL,
+	WAS("WAS"),
+	PHI("PHI"),
+	NYG("NYG"),
+	DAL("DAL"),
 
-	CAR,
-	NOR,
-	TAM,
-	ATL,
+	CAR("CAR"),
+	NOR("NOR"),
+	TAM("TAM"),
+	ATL("ATL"),
 
-	SEA,
-	ARI,
-	SFO,
-	STL
+	SEA("SEA"),
+	ARI("ARI"),
+	SFO("SFO"),
+	STL("STL");
 
-};
+	String team;
+
+	teamName(String _name){
+		team = _name;
+	}
+
+	String getTeamName()
+	{
+		return team;
+	}
+}
