@@ -117,7 +117,6 @@ public class databaseAPI
       return playerID;
    }
 
-   //make a SQL INSERT for player scores, per week
    public int insert_playerScores(String insertQuery)
    {
       int insertStatus = -1;
@@ -299,39 +298,28 @@ public class databaseAPI
       return data;
    }    
 
-   public Object[][] getPlayers()
+   public ArrayList<Player> getPlayers()
    {
-      ArrayList<Object> players = new ArrayList<Object>(400);
-      Object [][] data = null;
+      ArrayList<Player> players = new ArrayList<Player>(400);
       try 
       {
          stmt = conn.createStatement();
-         String SQL_Query = "SELECT position, teamName, firstName, lastName FROM Player LIMIT 50;";
+         String SQL_Query = "SELECT playerID, position, teamName, firstName, lastName FROM Player ORDER BY position, lastName LIMIT 100;";
       
          ResultSet result = stmt.executeQuery(SQL_Query);
 
-         ResultSetMetaData meta = result.getMetaData();
-         int numCols = meta.getColumnCount();
+         int playerID;
+         String position, firstName, lastName, teamName;
 
          while(result.next())
          {
-            Object [] rowData = new Object[numCols];
-            for (int i = 0; i < rowData.length; ++i)
-            {
-               players.add(result.getObject(i+1));
-            }
-         }
-         int numRows = players.size()/numCols;
+            playerID = result.getInt("playerID");
+            position = result.getString("position");
+            firstName = result.getString("firstName");
+            lastName = result.getString("lastName");
+            teamName = result.getString("teamName");
 
-         data = new Object[numRows][numCols];
-         int j=0;
-         for (int x = 0; x<numRows; x++)
-         {
-            for (int y = 0; y<numCols; y++)
-            {
-               data[x][y] = players.get(j);
-               j++;
-            }
+            players.add(new Player(playerID, lastName, firstName, teamName, position));
          }
 
          result.close();
@@ -345,7 +333,7 @@ public class databaseAPI
             //general errors
             exception.printStackTrace();
          }  
-      return data;
+      return players;
    }
 
    public double scoreStartingLineup(String userName, int week)
@@ -378,7 +366,6 @@ public class databaseAPI
             exception.printStackTrace();
          }  
       return insertStatus;
-
    }
 
    public ArrayList<String> getFantasyTeams()
@@ -486,30 +473,30 @@ public class databaseAPI
 
    public static void main(String[] args)
 	{
-KeyboardReader reader = new KeyboardReader();
+      KeyboardReader reader = new KeyboardReader();
 
-databaseAPI database = new databaseAPI();
+      databaseAPI database = new databaseAPI();
 
-database.createStandingsTables();
-ArrayList<Integer> lineup = database.getStartingLineupIDs("Asheq");
-String first = "";
-String last = "";
-System.out.print("Enter First Name: ");
-first = reader.readLine();
-System.out.print("Enter Last Name: ");
-last = reader.readLine();
+      database.createStandingsTables();
+      ArrayList<Integer> lineup = database.getStartingLineupIDs("Asheq");
+      String first = "";
+      String last = "";
+      System.out.print("Enter First Name: ");
+      first = reader.readLine();
+      System.out.print("Enter Last Name: ");
+      last = reader.readLine();
 
-int playerID = database.getPlayerID(first, last);
+      int playerID = database.getPlayerID(first, last);
 
-System.out.println("PlayerID is: " + playerID);
-int week = 1;
-System.out.println("He scored " + database.getPlayerPoints(playerID, week) + " points in week " + week);
+      System.out.println("PlayerID is: " + playerID);
+      int week = 1;
+      System.out.println("He scored " + database.getPlayerPoints(playerID, week) + " points in week " + week);
 
-System.out.println(lineup.get(0) + ", " + lineup.get(6));
+      System.out.println(lineup.get(0) + ", " + lineup.get(6));
 
-double week12score = database.scoreStartingLineup("Asheq",12);
+      double week12score = database.scoreStartingLineup("Asheq",12);
 
-System.out.println("Asheq scored " + week12score + " points in week 12");
-database.endConnection();
+      System.out.println("Asheq scored " + week12score + " points in week 12");
+      database.endConnection();
    }
 }
