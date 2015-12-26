@@ -5,9 +5,8 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.table.DefaultTableModel;
 
-class RosterPanel extends JPanel {
+class RosterPanel extends JPanel implements FantasyPanel {
 
-	private static final long serialVersionUID = 926370490364625738L;
 	private static Object [][] rosterData;
     private static databaseAPI database;
     private String clientUser;

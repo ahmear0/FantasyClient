@@ -4,7 +4,7 @@ import java.awt.FlowLayout;
 import java.awt.Dimension;
 import java.awt.Graphics;
 
-public class MenuPanel extends JPanel {
+public class MenuPanel extends JPanel implements FantasyPanel {
 
 	private static final long serialVersionUID = 7907473022182198683L;
 
@@ -23,4 +23,9 @@ public class MenuPanel extends JPanel {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
     } 
+
+    public void refresh()
+    {
+        
+    }
 }
