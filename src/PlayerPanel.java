@@ -12,7 +12,7 @@ import javax.swing.border.Border;
 
 import java.util.ArrayList;
 
-public class PlayerPanel extends JPanel implements FantasyPanel{
+public class PlayerPanel extends JPanel implements FantasyPanel {
 
     private ArrayList<Player> playerList;
 
@@ -29,8 +29,6 @@ public class PlayerPanel extends JPanel implements FantasyPanel{
             add(makePlayerButton(current.getFullName() + " " + current.getPosition()));
             i++;
         }
-
-
     }
 
     public void paintComponent(Graphics g) {

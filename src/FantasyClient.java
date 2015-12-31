@@ -24,13 +24,14 @@ public class FantasyClient extends JFrame {
 	private static String clientUser;
     private static boolean isAdmin = true;
     private static String adminString = "";
-    private static Object [][] standingsData;
+    private static Object [][] standingsData, scheduleData;
     private static ArrayList<Player> playerData;
     private static JButton refreshButton, scrapeButton, clientUserButton, changeUserButton;
     private static databaseAPI database;
     private static RosterPanel rosterTab;
+    private static MatchupPanel matchupTab;
     private static MenuPanel menuPanel;
-    private static JPanel matchupTab, playerTab, standingsTab;
+    private static JPanel playerTab, standingsTab;
     private JFrame currentFrame;
 
     public FantasyClient(String title) {
@@ -119,7 +120,7 @@ public class FantasyClient extends JFrame {
         }
 
         
-        matchupTab = new JPanel();
+        matchupTab = new MatchupPanel(clientUser, database);
         
         standingsTab = new JPanel();
         JTabbedPane tabPanel = new JTabbedPane();
@@ -154,6 +155,8 @@ public class FantasyClient extends JFrame {
         JTable standingsTable = new JTable(new DefaultTableModel(standingsData,standingsColumns));
         JScrollPane standingsContainer = new JScrollPane(standingsTable);
         standingsTab.add(standingsContainer, BorderLayout.CENTER);
+
+
 
         tabPanel.addTab("Roster",rosterTab);
         tabPanel.addTab("Matchup",matchupTab);

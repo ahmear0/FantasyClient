@@ -250,7 +250,6 @@ public class databaseAPI
 
    public Object[][] getCurrentRoster(String userName)
    {
-
       ArrayList<Object> rosterElements = new ArrayList<Object>(70);
       Object [][] data = null;
       try 
@@ -447,6 +446,55 @@ public class databaseAPI
       return data;
    }
 
+   public Object[][] getSchedule(String userName)
+   {
+      ArrayList<Object> schedule = new ArrayList<Object>(36);
+      Object [][] data = null;
+      try 
+      {
+         stmt = conn.createStatement();
+         String SQL_Query = "SELECT week, userName1 as 'Home Team', userName2 as 'Away Team' FROM Matchup M WHERE userName1='" + userName + "' UNION (SELECT week, userName1 as 'Home Team', userName2 as 'Away Team' FROM Matchup M WHERE userName2='" + userName + "') ORDER BY week;";
+      
+         ResultSet result = stmt.executeQuery(SQL_Query);
+
+         ResultSetMetaData meta = result.getMetaData();
+         int numCols = meta.getColumnCount();
+
+         while(result.next())
+         {
+            Object [] rowData = new Object[numCols];
+            for (int i = 0; i < rowData.length; ++i)
+            {
+               schedule.add(result.getObject(i+1));
+            }
+         }
+         int numRows = schedule.size()/numCols;
+
+         data = new Object[numRows][numCols];
+         int j=0;
+         for (int x = 0; x<numRows; x++)
+         {
+            for (int y = 0; y<numCols; y++)
+            {
+               data[x][y] = schedule.get(j);
+               j++;
+            }
+         }
+
+         result.close();
+
+      }  catch(SQLException sqlException)
+         {
+            sqlException.printStackTrace();
+         }  
+         catch(Exception exception)
+         {
+            //general errors
+            exception.printStackTrace();
+         }  
+      return data;
+   }
+   
    private int createStandingsTables()
    {
       int insertStatus = -1;

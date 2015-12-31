@@ -12,9 +12,7 @@ public class MenuPanel extends JPanel implements FantasyPanel {
 
     public MenuPanel(String _clientUser) {
 
-
         setBackground(new Color(255,255,255));
-        setSize(new Dimension(400,70));
         setLayout(new FlowLayout());
 
         clientUser = _clientUser;
