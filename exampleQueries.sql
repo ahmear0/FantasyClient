@@ -169,7 +169,15 @@ DELETE ps
 FROM playerScores as ps Natural Join Player as p 
 WHERE ps.playerID=p.playerID AND p.position='QB';
 
-
-
-
+/* Finding season matchups per clientUser */
+SELECT week, userName1 as 'Home Team', userName2 as 'Away Team'
+FROM Matchup M
+WHERE userName1='Asheq'
+  UNION
+  (
+    SELECT week, userName1 as 'Home Team', userName2 as 'Away Team'
+    FROM Matchup M
+    WHERE userName2='Asheq'
+    )
+ORDER BY week;
 
